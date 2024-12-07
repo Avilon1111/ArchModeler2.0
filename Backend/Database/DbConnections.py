@@ -2,10 +2,9 @@ from arango import ArangoClient
 from Database.config import *
 from DataModels.ApiModels import *
 from DataModels.DbModels import *
-from DataModels.ModelsConvertor import ModelConvertor
 
 """
-Принимает JSON, возвращает JSON
+Принимает dict, возвращает dict
 """
 
 
@@ -14,20 +13,20 @@ class ArchModelGraphDb():
     База данных с графом моделей
     """
 
-    def __init__(self, host: str, username: str, password: str, databaseName: str):
+    def __init__(self, host: str, username: str, password: str, data_base_name: str):
         self.__host = host
         self.__username = username
         self.__password = password
-        self.__databaseName = databaseName
+        self.__data_base_name = data_base_name
 
         client = ArangoClient(hosts=self.__host)
         sys_db = client.db('_system', username=self.__username, password=self.__password)
-        if not sys_db.has_database(self.__databaseName):
-            sys_db.create_database(self.__databaseName)
+        if not sys_db.has_database(self.__data_base_name):
+            sys_db.create_database(self.__data_base_name)
 
-        self.database = client.db(self.__databaseName, username=self.__username, password=self.__password)
+        self.database = client.db(self.__data_base_name, username=self.__username, password=self.__password)
 
-    def createModel(self, model: JSON):
+    def create_model(self, model: dict):
         if self.database.has_graph(model["_key"]):
             model = self.database.graph(model["_key"])
         else:
@@ -51,14 +50,14 @@ class ArchModelGraphDb():
                 to_vertex_collections=[CollectionNames.blocks.name]
             )
 
-    def deleteModel(self, model_id: str):
+    def delete_model(self, model_id: str):
         self.database.delete_graph(model_id, drop_collections=True)
 
     """
 
     """
 
-    def getElements(self, model_id: str):
+    def get_elements(self, model_id: str):
         model = self.database.graph(model_id)
         allElements = {
             "elements": model.vertex_collection(CollectionNames.blocks.name),
@@ -68,16 +67,25 @@ class ArchModelGraphDb():
     """
     """
 
-    def addBlock(self, model_id: str, block: JSON):
+    def add_block(self, model_id: str, block: dict):
         model = self.database.graph(model_id)
         model.vertex_collection(CollectionNames.blocks.name).insert(block)
 
-    def changeBlock(self, model_id: str, block_id: str, newBlock: JSON):
-        model = self.database.graph(model_id)
-        newBlock["_key"] = block_id
-        model.vertex_collection(CollectionNames.blocks.name).replace(newBlock)
 
-    def deleteBlock(self, model_id: str, block_id: str):
+    def get_block(self, model_id: str, block_id: str):
+        model = self.database.graph(model_id)
+        return model.vertex_collection(CollectionNames.blocks.name).get(block_id)
+
+    def find_block(self, model_id: str, block: dict):
+        model = self.database.graph(model_id)
+        return model.vertex_collection(CollectionNames.blocks.name).find(block).pop()
+
+    def change_block(self, model_id: str, block_id: str, new_block: dict):
+        model = self.database.graph(model_id)
+        new_block["_key"] = block_id
+        model.vertex_collection(CollectionNames.blocks.name).replace(new_block)
+
+    def delete_block(self, model_id: str, block_id: str):
         model = self.database.graph(model_id)
         model.vertex_collection(CollectionNames.blocks.name).delete(block_id)
 
@@ -85,7 +93,7 @@ class ArchModelGraphDb():
 
     """
 
-    def addArrow(self, model_id: str, arrow: JSON):
+    def addArrow(self, model_id: str, arrow: dict):
         model = self.database.graph(model_id)
         model.edge_collection(CollectionNames.arrows.name).insert(arrow)
 
@@ -99,7 +107,7 @@ class ArchModelGraphDb():
     """
     """
 
-    def addNest(self, model_id: str, nest: JSON):
+    def addNest(self, model_id: str, nest: dict):
         model = self.database.graph(model_id)
         model.edge_collection(CollectionNames.nests.name).insert(nest)
 
@@ -123,29 +131,29 @@ class ArchModelInfoDb:
         self.__host = host
         self.__username = username
         self.__password = password
-        self.__databaseName = databasename
+        self.__data_base_name = databasename
 
         client = ArangoClient(hosts=self.__host)
         sys_db = client.db('_system', username=self.__username, password=self.__password)
-        if not sys_db.has_database(self.__databaseName):
-            sys_db.create_database(self.__databaseName)
+        if not sys_db.has_database(self.__data_base_name):
+            sys_db.create_database(self.__data_base_name)
 
-        self.database = client.db(self.__databaseName, username=self.__username, password=self.__password)
+        self.database = client.db(self.__data_base_name, username=self.__username, password=self.__password)
         if self.database.has_collection("DatabaseInfo"):
             self.collection = self.database.collection("DatabaseInfo")
         else:
             self.collection = self.database.create_collection("DatabaseInfo")
 
-    def getModelDescription(self, model_id: str) -> Model | None:
+    def get_model(self, model_id: str) -> dict | None:
         return self.collection.get(model_id)
 
-    def createModel(self, model: JSON):
+    def create_model(self, model: dict):
         self.collection.insert(model)
 
-    def deleteModel(self, model_id: str):
+    def delete_model(self, model_id: str):
         self.collection.delete(model_id)
 
-    def changeModelDescription(self, model: JSON):
+    def change_model(self, model: dict):
         self.collection.update_match({'_key': model["_key"]}, model)
 
 

@@ -1,25 +1,19 @@
 from pydantic import BaseModel
 from typing import List, Optional, Union
-from enum import Enum
-
-class AbstractionLevels(str, Enum):
-    Context = "Context"
-    Container = "Container"
-    Component = "Component"
-    Code = "Code"
-
+from DataModels.Statuses import *
 
 class Model(BaseModel):
-    model_id: str
+    id: str
     name: str
     author: str
     info: str
 
-
 class Element(BaseModel):
-    id: Optional[str]
+    id: Optional[str] = ""
     name: str
     info: str
+
+
 
 
 class HitBox(BaseModel):
@@ -36,7 +30,7 @@ class HitBox(BaseModel):
 class Block(Element):
     hit_box: HitBox
     type: AbstractionLevels
-    visibility: bool
+    visibility: Visibility
 
 
 class Connection(Element):
@@ -45,7 +39,7 @@ class Connection(Element):
 
 
 class Arrow(Connection):
-    visibility: bool
+    visibility: Visibility
 
 
 class Nest(Connection):

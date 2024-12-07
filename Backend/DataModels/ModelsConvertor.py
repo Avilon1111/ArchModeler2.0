@@ -1,93 +1,150 @@
 from DataModels.ApiModels import Model, Block, Arrow, Nest
-from DataModels.DbModels import JSON, CollectionNames
-
-"""
-У JSON всегда есть поле "_key"
-"""
+from DataModels.DbModels import CollectionNames
+from copy import deepcopy
 
 
 class ModelConvertor:
 
+    @staticmethod
+    def model_to_dict(model: Model) -> dict:
+        """
+        required attribute "id"
+        """
+        model_dict = model.model_dump()
+
+        model_dict["_key"] = model_dict["id"]
+        del model_dict["id"]
+
+        return model_dict
 
     @staticmethod
+    def model_to_api(model: dict) -> Model:
+        """
+        required attribute "_key"
+        """
+        model_dict = deepcopy(model)
+
+        model_dict["id"] = model_dict["_key"]
+        del model_dict["_key"]
+
+        model_API = Model(**model_dict)
+        return model_API
+
 
     @staticmethod
-    def convert_model_to_api(model: JSON) -> Model:
-        model["model_id"] = model["_key"]
-        del model["_key"]
-        ret = Model(**model)
-        return ret
+    def block_to_dict(block: Block) -> dict:
+        """
+        Optional attribute "id"
+        """
+
+        block_dict = block.model_dump()
+
+        if "id" in block_dict.keys():
+            if block_dict["id"] != "":
+                block_dict["_key"] = block_dict["id"]
+            del block_dict["id"]
+
+        return block_dict
 
     @staticmethod
-    def convert_block_to_api(block: JSON) -> Block:
-        block["id"] = block["_key"]
-        del block["_key"]
-        ret = Model(**block)
-        return ret
+    def block_to_api(block: dict) -> Block:
+        """
+        Optional attribute "_key"
+        """
+        block_dict = deepcopy(block)
+
+        if "_key" in block_dict.keys():
+            if block_dict["_key"] != "":
+                block_dict["id"] = block_dict["_key"]
+            del block_dict["_key"]
+
+        block_API = Block(**block_dict)
+        return block_API
+
 
     @staticmethod
-    def convert_arrow_to_api(arrow: JSON) -> Arrow:
-        arrow["id"] = arrow["_key"]
-        del arrow["_key"]
-        arrow["from_element"] = arrow["_from"][len(CollectionNames.arrows):]
-        del arrow["_from"]
-        arrow["to_element"] = arrow["_to"][len(CollectionNames.arrows):]
-        del arrow["_to"]
-        ret = Model(**arrow)
-        return ret
+    def arrow_to_dict(arrow: Arrow) -> dict:
+        """
+        Optional attribute "id"
+        """
+
+        arrow_dict = arrow.model_dump()
+
+        if "id" in arrow_dict.keys():
+            if arrow_dict["id"] != "":
+                arrow_dict["_key"] = arrow_dict["id"]
+            del arrow_dict["id"]
+
+        arrow_dict["_from"] = CollectionNames.arrows + "/" + arrow_dict["from_element"]
+        del arrow_dict["from_element"]
+
+        arrow_dict["_to"] = CollectionNames.arrows + "/" + arrow_dict["to_element"]
+        del arrow_dict["to_element"]
+
+        return arrow_dict
 
     @staticmethod
-    def convert_nest_to_api(nest: JSON) -> Nest:
-        return ModelConvertor.api_convertor(nest)
+    def arrow_to_api(arrow: dict) -> Arrow:
+        """
+        Optional attribute "_key"
+        """
+        arrow_dict = deepcopy(arrow)
+
+        if "_key" in arrow_dict.keys():
+            if arrow_dict["_key"] != "":
+                arrow_dict["id"] = arrow_dict["_key"]
+            del arrow_dict["_key"]
+
+        arrow_dict["from_element"] = arrow_dict["_from"][len(CollectionNames.arrows) + 1:]
+        del arrow_dict["_from"]
+
+        arrow_dict["to_element"] = arrow_dict["_to"][len(CollectionNames.arrows) + 1:]
+        del arrow_dict["_to"]
+
+        arrow_API = Arrow(**arrow_dict)
+        return arrow_API
+
+
 
     @staticmethod
-    def convert_model_to_db(model: Model) -> JSON:
-        ret = model.dict()
-        if ret["model_id"] == "":
-            del ret["model_id"]
-        if "model_id" in ret.keys():
-            ret["_key"] = ret["model_id"]
-            del ret["model_id"]
-        return ret
+    def nest_to_dict(nest: Nest) -> dict:
+        """
+        Optional attribute "id"
+        """
+
+        nest_dict = nest.model_dump()
+
+        if "id" in nest_dict.keys():
+            if nest_dict["id"] != "":
+                nest_dict["_key"] = nest_dict["id"]
+            del nest_dict["id"]
+
+        nest_dict["_from"] = CollectionNames.nests + "/" + nest_dict["from_element"]
+        del nest_dict["from_element"]
+
+        nest_dict["_to"] = CollectionNames.nests + "/" + nest_dict["to_element"]
+        del nest_dict["to_element"]
+
+        return nest_dict
+
 
     @staticmethod
-    def convert_block_to_db(block: Block) -> JSON:
-        ret = block.dict()
-        if ret["id"] == "":
-            del ret["id"]
-        if "id" in ret.keys():
-            ret["_key"] = ret["id"]
-            del ret["id"]
-        return ret
+    def nest_to_api(nest: dict) -> Nest:
+        """
+        Optional attribute "_key"
+        """
+        nest_dict = deepcopy(nest)
 
-    @staticmethod
-    def convert_arrow_to_db(arrow: Arrow) -> JSON:
-        ret = arrow.dict()
-        if ret["id"] == "":
-            del ret["id"]
-        if "id" in ret.keys():
-            ret["_key"] = ret["id"]
-            del ret["id"]
-        if "from_element" in ret.keys():
-            ret["_from"] = CollectionNames.blocks + "/" + ret["from_element"]
-            del ret["from_element"]
-        if "to_element" in ret.keys():
-            ret["_to"] = CollectionNames.blocks + "/" + ret["to_element"]
-            del ret["to_element"]
-        return ret
+        if "_key" in nest_dict.keys():
+            if nest_dict["_key"] is not None:
+                nest_dict["id"] = nest_dict["_key"]
+            del nest_dict["_key"]
 
-    @staticmethod
-    def convert_nest_to_db(nest: Nest) -> JSON:
-        ret = nest.dict()
-        if ret["id"] == "":
-            del ret["id"]
-        if "id" in ret.keys():
-            ret["_key"] = ret["id"]
-            del ret["id"]
-        if "from_element" in ret.keys():
-            ret["_from"] = CollectionNames.blocks + "/" + ret["from_element"]
-            del ret["from_element"]
-        if "to_element" in ret.keys():
-            ret["_to"] = CollectionNames.blocks + "/" + ret["to_element"]
-            del ret["to_element"]
-        return ret
+        nest_dict["from_element"] = nest_dict["_from"][len(CollectionNames.nests) + 1:]
+        del nest_dict["_from"]
+
+        nest_dict["to_element"] = nest_dict["_to"][len(CollectionNames.nests) + 1:]
+        del nest_dict["_to"]
+
+        nest_API = Nest(**nest_dict)
+        return nest_API

@@ -1,12 +1,15 @@
-from DataModels.ApiModels import *
-from fastapi import APIRouter, HTTPException
-from Database.database import archModelGraphDb, archModelInfoDb
+from fastapi import APIRouter
+from Api.routers.models import *
+from DataModels.ApiModels import ModelElements
 
-router = APIRouter(prefix="/models/{model_id}", tags=["Элементы модели"])
+router = APIRouter()
 
-@router.get("/elements")
-async def get_elements(model_id: str) -> ModelElements:
-    model = archModelInfoDb.getModelDescription(model_id)
-    if not model:
-        raise HTTPException(status_code=404, detail="Модель не найдена")
+
+@router.get("/{id}/elements")
+async def get_all_elements(model_id: str) -> ModelElements:
+    await get_model(model_id)
+
     return archModelGraphDb.getElements(model_id)
+
+async def get_visible_elements(model_id: str) -> ModelElements:
+    pass
