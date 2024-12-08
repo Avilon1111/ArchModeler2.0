@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional, Union
+from typing import List, Optional
 from DataModels.Statuses import *
 
 class Model(BaseModel):
@@ -30,7 +30,7 @@ class HitBox(BaseModel):
 class Block(Element):
     hit_box: HitBox
     type: AbstractionLevels
-    visibility: Visibility
+    visibility: Optional[Visibility] = Visibility.invisible
 
 
 class Connection(Element):
@@ -39,7 +39,7 @@ class Connection(Element):
 
 
 class Arrow(Connection):
-    visibility: Visibility
+    pass
 
 
 class Nest(Connection):
@@ -47,5 +47,5 @@ class Nest(Connection):
 
 
 class ModelElements(BaseModel):
-    elements: List[Block]
-    arrows: List[Arrow]
+    blocks: Optional[List[Block]] = []
+    arrows: Optional[List[Arrow]] = []

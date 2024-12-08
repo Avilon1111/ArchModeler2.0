@@ -77,12 +77,11 @@ def test_arrow():
         "name": "string",
         "info": "string",
         "_from": "blocks/string",
-        "_to": "blocks/string",
-        "visibility": "visible"
+        "_to": "blocks/string"
     }
 
     arrow_API = Arrow.model_validate(from_json(
-        '{"id": "id", "name": "string", "from_element": "string", "to_element": "string", "visibility": "visible", "info": "string"}'))
+        '{"id": "id", "name": "string", "from_element": "string", "to_element": "string", "info": "string"}'))
 
     assert arrow_dict == ModelConvertor.arrow_to_dict(arrow_API)
     assert arrow_API == ModelConvertor.arrow_to_api(arrow_dict)
@@ -96,11 +95,10 @@ def test_arrow_no_id():
         "info": "string",
         "_from": "blocks/string",
         "_to": "blocks/string",
-        "visibility": "visible"
     }
 
     arrow_API = Arrow.model_validate(from_json(
-        '{"name": "string", "from_element": "string", "to_element": "string", "visibility": "visible", "info": "string"}'))
+        '{"name": "string", "from_element": "string", "to_element": "string", "info": "string"}'))
 
     assert arrow_dict == ModelConvertor.arrow_to_dict(arrow_API)
     assert arrow_API == ModelConvertor.arrow_to_api(arrow_dict)

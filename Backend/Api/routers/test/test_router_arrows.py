@@ -22,19 +22,19 @@ def test_create_read_update_delete():
 
     block = Block.model_validate(from_json('{"id": "id_block_1", "name": "string", "info": "string",'
                                            '"hit_box": {"width": 0,"height": 0,"x_axis": 0,"y_axis": 0,"rotation": 0},'
-                                           '"type": "Context", "visibility": "visible"}'))
+                                           '"type": "Context"}'))
 
     client.post(f"/models/{model.id}/blocks", json=block.model_dump())
     block_2 = Block.model_validate(from_json('{"id": "id_block_2", "name": "zxc", "info": "stringzxc",'
                                              '"hit_box": {"width": 0,"height": 0,"x_axis": 0,"y_axis": 0,"rotation": 0},'
-                                             '"type": "Context", "visibility": "visible"}'))
+                                             '"type": "Context"}'))
     client.post(f"/models/{model.id}/blocks", json=block_2.model_dump())
     try:
 
         arrow = Arrow.model_validate(from_json('{"id": "","name": "string","info": "string",'
-                                               '"from_element": "id_block_1","to_element": "id_block_2","visibility": "visible"}'))
+                                               '"from_element": "id_block_1","to_element": "id_block_2"}'))
         arrow_2 = Arrow.model_validate(from_json('{"name": "string","info": "string",'
-                                               '"from_element": "id_block_2","to_element": "id_block_1","visibility": "visible"}'))
+                                               '"from_element": "id_block_2","to_element": "id_block_1"}'))
         response = client.post(f"/models/{model.id}/arrows", json=arrow.model_dump())
 
         assert response.status_code == 200
@@ -60,5 +60,3 @@ def test_create_read_update_delete():
         assert response_4.status_code == 200
     finally:
         client.delete(f"/models/{model.id}")
-        client.delete(f"/models/{model.id}/blocks/{block.id}")
-        client.delete(f"/models/{model.id}/blocks/{block_2.id}")

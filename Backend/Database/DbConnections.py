@@ -1,4 +1,6 @@
-from arango import ArangoClient
+from arango import ArangoClient, AQLQueryKillError
+
+from DataModels.ModelsConvertor import ModelConvertor
 from Database.config import *
 from DataModels.ApiModels import *
 from DataModels.DbModels import *
@@ -57,12 +59,29 @@ class ArchModelGraphDb():
 
     """
 
-    def get_elements(self, model_id: str):
+    def get_visible_elements(self, model_id: str) -> dict[str: dict]:
         model = self.database.graph(model_id)
-        allElements = {
-            "elements": model.vertex_collection(CollectionNames.blocks.name),
-            "arrows": model.edge_collection(CollectionNames.arrows.name)}
-        return allElements
+        all_elements = {
+            CollectionNames.blocks.name: [],
+            CollectionNames.arrows.name: []}
+
+        blocks = model.vertex_collection(CollectionNames.blocks.name)
+        for block in blocks:
+            if block["visibility"] == Visibility.visible:
+                all_elements[CollectionNames.blocks.name].append(block)
+
+                query = f"""
+                FOR v,e,p IN 1..1 OUTBOUND "{block["_id"]}" GRAPH "{model.name}"
+                return p
+                """
+                for path in archModelGraphDb.database.aql.execute(query):
+                    vertex_1 = path['vertices'][0]
+                    vertex_2 = path['vertices'][1]
+                    edge = path['edges'][0]
+                    if vertex_1["visibility"] == Visibility.visible.name and vertex_2[
+                        "visibility"] == Visibility.visible.name:
+                        all_elements[CollectionNames.arrows.name].append(edge)
+        return all_elements
 
     """
     """
