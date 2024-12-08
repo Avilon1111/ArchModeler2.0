@@ -7,7 +7,7 @@ app = FastAPI()
 
 
 # app.include_router(elements.router)
-# app.include_router(nests.router)
+app.include_router(nests.router)
 app.include_router(blocks.router)
-# app.include_router(arrows.router)
+app.include_router(arrows.router)
 app.include_router(models.router)

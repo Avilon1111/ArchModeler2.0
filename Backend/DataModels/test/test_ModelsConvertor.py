@@ -76,8 +76,8 @@ def test_arrow():
         "_key": "id",
         "name": "string",
         "info": "string",
-        "_from": "arrows/string",
-        "_to": "arrows/string",
+        "_from": "blocks/string",
+        "_to": "blocks/string",
         "visibility": "visible"
     }
 
@@ -94,8 +94,8 @@ def test_arrow_no_id():
     arrow_dict: dict = {
         "name": "string",
         "info": "string",
-        "_from": "arrows/string",
-        "_to": "arrows/string",
+        "_from": "blocks/string",
+        "_to": "blocks/string",
         "visibility": "visible"
     }
 
@@ -113,8 +113,8 @@ def test_nest():
         "_key": "id",
         "name": "string",
         "info": "string",
-        "_from": "nests/string",
-        "_to": "nests/string",
+        "_from": "blocks/string",
+        "_to": "blocks/string",
     }
 
     nest_API = Nest.model_validate(from_json(
@@ -130,8 +130,8 @@ def test_nest_no_id():
     nest_dict: dict = {
         "name": "string",
         "info": "string",
-        "_from": "nests/string",
-        "_to": "nests/string",
+        "_from": "blocks/string",
+        "_to": "blocks/string",
     }
 
     nest_API = Nest.model_validate(from_json(

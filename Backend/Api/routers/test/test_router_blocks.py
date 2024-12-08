@@ -5,7 +5,6 @@ from pydantic_core import from_json
 
 from DataModels.ApiModels import Block
 from app import app
-
 """
 interface:
 create_block(model_id: str, block: Block)
@@ -53,6 +52,7 @@ def test_create_read_update_delete():
         assert response_4.status_code == 200
     finally:
         client.delete(f"/models/{model.id}")
+
 
 
 def test_read_non_existent():

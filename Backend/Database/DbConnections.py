@@ -71,7 +71,6 @@ class ArchModelGraphDb():
         model = self.database.graph(model_id)
         model.vertex_collection(CollectionNames.blocks.name).insert(block)
 
-
     def get_block(self, model_id: str, block_id: str):
         model = self.database.graph(model_id)
         return model.vertex_collection(CollectionNames.blocks.name).get(block_id)
@@ -93,30 +92,50 @@ class ArchModelGraphDb():
 
     """
 
-    def addArrow(self, model_id: str, arrow: dict):
+    def add_arrow(self, model_id: str, arrow: dict):
         model = self.database.graph(model_id)
         model.edge_collection(CollectionNames.arrows.name).insert(arrow)
 
-    def changeArrow(self,):
-        pass
+    def get_arrow(self, model_id: str, arrow_id: str):
+        model = self.database.graph(model_id)
+        return model.edge_collection(CollectionNames.arrows.name).get(arrow_id)
 
-    def deleteArrow(self, model_id: str, arrow_id: str):
+    def find_arrow(self, model_id: str, arrow: dict):
+        model = self.database.graph(model_id)
+        return model.edge_collection(CollectionNames.arrows.name).find(arrow).pop()
+
+    def change_arrow(self, model_id: str, arrow_id: str, new_arrow: dict):
+        model = self.database.graph(model_id)
+        new_arrow["_key"] = arrow_id
+        model.edge_collection(CollectionNames.arrows.name).replace(new_arrow)
+
+    def delete_arrow(self, model_id: str, arrow_id: str):
         model = self.database.graph(model_id)
         model.edge_collection(CollectionNames.arrows.name).delete(arrow_id)
 
     """
     """
 
-    def addNest(self, model_id: str, nest: dict):
+    def add_nest(self, model_id: str, nest: dict):
         model = self.database.graph(model_id)
         model.edge_collection(CollectionNames.nests.name).insert(nest)
 
-    def changeNest(self):
-        pass
-
-    def deleteNest(self, model_id: str, nest_id: str):
+    def get_nest(self, model_id: str, nest_id: str):
         model = self.database.graph(model_id)
-        model.edge_collection(CollectionNames.arrows.name).delete(nest_id)
+        return model.edge_collection(CollectionNames.nests.name).get(nest_id)
+
+    def find_nest(self, model_id: str, nest: dict):
+        model = self.database.graph(model_id)
+        return model.edge_collection(CollectionNames.nests.name).find(nest).pop()
+
+    def change_nest(self, model_id: str, nest_id: str, new_nest: dict):
+        model = self.database.graph(model_id)
+        new_nest["_key"] = nest_id
+        model.edge_collection(CollectionNames.nests.name).replace(new_nest)
+
+    def delete_nest(self, model_id: str, nest_id: str):
+        model = self.database.graph(model_id)
+        model.edge_collection(CollectionNames.nests.name).delete(nest_id)
 
     """
     """

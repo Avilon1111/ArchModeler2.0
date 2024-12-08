@@ -75,10 +75,10 @@ class ModelConvertor:
                 arrow_dict["_key"] = arrow_dict["id"]
             del arrow_dict["id"]
 
-        arrow_dict["_from"] = CollectionNames.arrows + "/" + arrow_dict["from_element"]
+        arrow_dict["_from"] = CollectionNames.blocks + "/" + arrow_dict["from_element"]
         del arrow_dict["from_element"]
 
-        arrow_dict["_to"] = CollectionNames.arrows + "/" + arrow_dict["to_element"]
+        arrow_dict["_to"] = CollectionNames.blocks + "/" + arrow_dict["to_element"]
         del arrow_dict["to_element"]
 
         return arrow_dict
@@ -95,10 +95,10 @@ class ModelConvertor:
                 arrow_dict["id"] = arrow_dict["_key"]
             del arrow_dict["_key"]
 
-        arrow_dict["from_element"] = arrow_dict["_from"][len(CollectionNames.arrows) + 1:]
+        arrow_dict["from_element"] = arrow_dict["_from"][len(CollectionNames.blocks) + 1:]
         del arrow_dict["_from"]
 
-        arrow_dict["to_element"] = arrow_dict["_to"][len(CollectionNames.arrows) + 1:]
+        arrow_dict["to_element"] = arrow_dict["_to"][len(CollectionNames.blocks) + 1:]
         del arrow_dict["_to"]
 
         arrow_API = Arrow(**arrow_dict)
@@ -119,10 +119,10 @@ class ModelConvertor:
                 nest_dict["_key"] = nest_dict["id"]
             del nest_dict["id"]
 
-        nest_dict["_from"] = CollectionNames.nests + "/" + nest_dict["from_element"]
+        nest_dict["_from"] = CollectionNames.blocks + "/" + nest_dict["from_element"]
         del nest_dict["from_element"]
 
-        nest_dict["_to"] = CollectionNames.nests + "/" + nest_dict["to_element"]
+        nest_dict["_to"] = CollectionNames.blocks + "/" + nest_dict["to_element"]
         del nest_dict["to_element"]
 
         return nest_dict
@@ -140,10 +140,10 @@ class ModelConvertor:
                 nest_dict["id"] = nest_dict["_key"]
             del nest_dict["_key"]
 
-        nest_dict["from_element"] = nest_dict["_from"][len(CollectionNames.nests) + 1:]
+        nest_dict["from_element"] = nest_dict["_from"][len(CollectionNames.blocks) + 1:]
         del nest_dict["_from"]
 
-        nest_dict["to_element"] = nest_dict["_to"][len(CollectionNames.nests) + 1:]
+        nest_dict["to_element"] = nest_dict["_to"][len(CollectionNames.blocks) + 1:]
         del nest_dict["_to"]
 
         nest_API = Nest(**nest_dict)
