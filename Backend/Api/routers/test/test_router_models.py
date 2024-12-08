@@ -38,16 +38,13 @@ def test_double_creation():
     model = Model.model_validate(from_json('{"id": "test_double_creation", "name": "name", "author": "author", "info": "info"}'))
 
     client.post("/models", json=model.model_dump())
-
-    model = Model.model_validate(
-        from_json('{"id": "test_create_read_update_delete_1", "name": "name_1", "author": "author", "info": "info"}'))
-
-    client.post("/models", json=model.model_dump())
     response = client.post("/models", json=model.model_dump())
 
     assert response.status_code == 208
 
-    client.delete(f"/models/{model.id}")
+    response = client.delete(f"/models/{model.id}")
+
+    assert response.status_code == 200
 
 
 def test_read_non_existent():

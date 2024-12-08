@@ -20,7 +20,7 @@ async def create_block(model_id: str, block: Block) -> Block:
 
     return ModelConvertor.block_to_api(archModelGraphDb.find_block(model_id, ModelConvertor.block_to_dict(block)))
 
-@router.get("/{id}")
+@router.get("/{block_id}")
 async def get_block(model_id: str, block_id: str) -> Block:
     await get_model(model_id)
 
@@ -48,7 +48,7 @@ async def change_block(model_id: str, block: Block) -> Block:
     return await get_block(model_id, block.id)
 
 
-@router.delete("/{id}")
+@router.delete("/{block_id}")
 async def delete_block(model_id: str, block_id: str):
     await get_model(model_id)
     await get_block(model_id, block_id)
