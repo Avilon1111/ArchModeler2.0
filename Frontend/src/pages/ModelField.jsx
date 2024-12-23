@@ -3,6 +3,7 @@ import { useFetching } from "../hooks/useFetching.js";
 import { useParams } from "react-router-dom";
 import ModelService from "../API/ModelService.jsx";
 import Loader from "../components/UI/loader/Loader.jsx";
+import ElementsField from "./Field/Field.jsx";
 
 const ModelField = () => {
     const params = useParams();
@@ -26,7 +27,7 @@ const ModelField = () => {
 
     return (
         <div>
-            <h1>Вы открыли страницу модели с ID = {params.id}</h1>
+            {/* <h1>Вы открыли страницу модели с ID = {params.id}</h1>
             {isLoading ? (
                 <Loader />
             ) : (
@@ -44,7 +45,8 @@ const ModelField = () => {
                     )
                 }
             </div>
-            }
+            } */}
+            <ElementsField/>
         </div>
     );
 };
