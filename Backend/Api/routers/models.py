@@ -6,6 +6,14 @@ import arango.exceptions
 
 router = APIRouter(prefix="/models", tags=["Модели"])
 
+@router.get("")
+async def get_all_models() -> list[Model]:
+    models_dict = archModelInfoDb.get_all_models()
+    models = list()
+    for model_dict in models_dict:
+        models.append(ModelConvertor.model_to_api(model_dict))
+    return models
+
 @router.post("")
 async def create_model(model: Model) -> Model:
     if archModelInfoDb.get_model(model.id):
