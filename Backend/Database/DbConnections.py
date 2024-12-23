@@ -1,6 +1,4 @@
-from arango import ArangoClient, AQLQueryKillError
-
-from DataModels.ModelsConvertor import ModelConvertor
+from arango import ArangoClient
 from Database.config import *
 from DataModels.ApiModels import *
 from DataModels.DbModels import *
@@ -184,6 +182,9 @@ class ArchModelInfoDb:
 
     def get_model(self, model_id: str) -> dict | None:
         return self.collection.get(model_id)
+
+    def get_all_models(self):
+        return self.collection.all()
 
     def create_model(self, model: dict):
         self.collection.insert(model)

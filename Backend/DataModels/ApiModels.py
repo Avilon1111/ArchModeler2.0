@@ -14,8 +14,6 @@ class Element(BaseModel):
     info: str
 
 
-
-
 class HitBox(BaseModel):
     """
     coordinates of left_upper corner
@@ -49,3 +47,4 @@ class Nest(Connection):
 class ModelElements(BaseModel):
     blocks: Optional[List[Block]] = []
     arrows: Optional[List[Arrow]] = []
+
